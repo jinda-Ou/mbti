@@ -2,239 +2,266 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>MBTI 人格测试 ✨</title>
+  <title>MBTI 人格测试</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #fdfbfb, #ebedee);
       margin: 0;
-      padding: 0;
-      color: #222;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #0f172a, #020617);
+      color: #e5e7eb;
     }
     .container {
       max-width: 760px;
       margin: 0 auto;
-      padding: 24px 20px 80px;
-    }
-    .card {
-      background: #ffffffcc;
-      backdrop-filter: blur(10px);
-      border-radius: 24px;
-      padding: 28px 26px 32px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-      animation: fadeIn 0.6s ease;
+      padding: 40px 20px 80px;
     }
     h1 {
+      font-size: 32px;
+      margin-bottom: 12px;
       text-align: center;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
     }
     .subtitle {
       text-align: center;
-      color: #666;
-      margin-bottom: 24px;
-      font-size: 14px;
-    }
-    .progress {
-      height: 6px;
-      background: #eee;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 22px;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #a78bfa, #f472b6);
-      transition: width 0.3s ease;
+      color: #94a3b8;
+      margin-bottom: 40px;
     }
     .question {
-      display: none;
-    }
-    .question.active {
-      display: block;
-    }
-    .q-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 18px;
-    }
-    .options button {
-      width: 100%;
-      text-align: left;
-      padding: 14px 16px;
-      margin-bottom: 12px;
+      margin-bottom: 28px;
+      padding: 20px;
       border-radius: 14px;
-      border: none;
-      background: #f4f4f5;
-      font-size: 15px;
+      background: rgba(255,255,255,0.04);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .question p {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+    label {
+      display: block;
+      margin: 6px 0;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
-    .options button:hover {
-      background: #ede9fe;
-      transform: translateY(-1px);
-    }
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 24px;
-    }
-    .nav button {
-      padding: 10px 18px;
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
       border-radius: 999px;
-      border: none;
-      font-size: 14px;
-      cursor: pointer;
-      background: #4f46e5;
+      background: #6366f1;
       color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
     }
-    .nav button.secondary {
-      background: #e5e7eb;
-      color: #333;
+    button:hover {
+      background: #4f46e5;
     }
     .result {
-      display: none;
-      text-align: center;
-      margin-top: 30px;
+      margin-top: 50px;
+      padding: 28px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      line-height: 1.7;
     }
     .type {
-      font-size: 42px;
-      font-weight: 700;
-      margin-bottom: 10px;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 12px;
     }
-    .desc {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #444;
+    .section {
+      margin-top: 14px;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .section span {
+      color: #a5b4fc;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="card">
-      <h1>MBTI 人格测试 💫</h1>
-      <div class="subtitle">发现你的性格类型 · 32 道题 · 约 3 分钟</div>
+    <h1>MBTI 人格测试</h1>
+    <div class="subtitle">通过你的直觉选择，了解你更真实的一面</div>
 
-      <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
-
-      <div id="questions"></div>
-
-      <div class="nav">
-        <button class="secondary" onclick="prev()">← 上一题</button>
-        <button onclick="next()">下一题 →</button>
+    <form id="test">
+      <div class="question">
+        <p>在聚会中，你通常：</p>
+        <label><input type="radio" name="q1" value="E"> 主动与他人交流</label>
+        <label><input type="radio" name="q1" value="I"> 更倾向于观察和倾听</label>
       </div>
-
-      <div class="result" id="result">
-        <div class="type" id="type"></div>
-        <div class="desc" id="desc"></div>
+      <div class="question">
+        <p>你更相信：</p>
+        <label><input type="radio" name="q2" value="S"> 具体经验和事实</label>
+        <label><input type="radio" name="q2" value="N"> 直觉与整体趋势</label>
       </div>
-    </div>
+      <div class="question">
+        <p>做决定时你更看重：</p>
+        <label><input type="radio" name="q3" value="T"> 逻辑与客观分析</label>
+        <label><input type="radio" name="q3" value="F"> 情感与他人感受</label>
+      </div>
+      <div class="question">
+        <p>你的生活方式更接近：</p>
+        <label><input type="radio" name="q4" value="J"> 计划明确、可控</label>
+        <label><input type="radio" name="q4" value="P"> 灵活随性、开放</label>
+      </div>
+      <button type="button" onclick="calculate()">查看测试结果</button>
+    </form>
+
+    <div id="result" class="result" style="display:none"></div>
   </div>
 
 <script>
-const data = [
-  // EI
-  ['在聚会中你通常会… 🎉','和很多人聊天','只和熟悉的人待在一起','EI'],
-  ['你在什么情况下更有能量… ⚡','与人互动','独处','EI'],
-  ['你更喜欢哪种对话…','话题广泛','深入的一对一交流','EI'],
-  ['面对陌生人时你通常…','外向健谈','内敛谨慎','EI'],
-  // SN
-  ['你更关注… 🔍','事实与细节','想法与可能性','SN'],
-  ['你更信任哪种信息…','具体可验证的','抽象概念','SN'],
-  ['你更容易被什么吸引…','实际用途','未来愿景','SN'],
-  ['你更偏好哪种学习方式…','动手实践','概念理解','SN'],
-  // TF
-  ['做决定时你更依赖… ⚖️','逻辑分析','个人感受','TF'],
-  ['你更希望被看作是…','公正的','善良的','TF'],
-  ['在冲突中你更关注…','谁对谁错','谁受到了伤害','TF'],
-  ['你认为反馈应该是…','直接坦诚','照顾情绪','TF'],
-  // JP
-  ['你的日程通常是… 📅','有计划的','灵活的','JP'],
-  ['截止日期会让你…','提前完成','临近才开始','JP'],
-  ['你更希望生活是…','有秩序的','开放变化的','JP'],
-  ['你认为计划应该…','固定执行','随时调整','JP'],
-  // repeat balanced
-  ['In groups you usually…','Lead','Observe','EI'],
-  ['Your imagination is…','Grounded','Expansive','SN'],
-  ['You admire people who are…','Smart','Warm','TF'],
-  ['You feel better when things are…','Settled','Evolving','JP'],
-  ['You recharge by…','Being active','Being reflective','EI'],
-  ['You notice…','What is','What could be','SN'],
-  ['You decide based on…','Principles','Values','TF'],
-  ['You like days that are…','Structured','Spontaneous','JP'],
-  ['In discussions you are…','Direct','Gentle','TF'],
-  ['You prefer instructions that are…','Clear','Suggestive','SN'],
-  ['You are more…','Expressive','Contained','EI'],
-  ['You feel safe with…','Plans','Freedom','JP'],
-  ['You enjoy stories that are…','Realistic','Symbolic','SN'],
-  ['You care more about…','Accuracy','Harmony','TF'],
-  ['You trust yourself when…','Prepared','Improvising','JP']
-];
-
-const descMap = {
-  INTJ:'Strategic, independent, and future-oriented. You enjoy systems and clarity.',
-  INFP:'Idealistic and sincere. You value inner harmony and authenticity.',
-  INFJ:'Insightful and purposeful. You seek meaning in people and ideas.',
-  ENFP:'Curious and expressive. You see life as full of potential.',
-  ISTJ:'Reliable and methodical. You value responsibility and order.',
-  ESFP:'Playful and warm. You live in the moment and enjoy connection.',
+const profiles = {
+  INTJ: {
+    title: "战略型思考者",
+    core: "理性、自律、追求长期结构与秩序。",
+    interest: "哲学、科技、系统设计、独立创作",
+    career: "产品经理、研究员、工程师、策划、作家",
+    city: "信息密度高、秩序感强的城市",
+    partner: "ENFP、ENTP"
+  },
+  INTP: {
+    title: "逻辑型探索者",
+    core: "沉浸于概念世界，热爱理解事物本质。",
+    interest: "理论研究、游戏、代码、冷门知识",
+    career: "程序员、学者、分析师",
+    city: "包容多元、自由度高的城市",
+    partner: "ENTJ、ENFJ"
+  },
+  ENTJ: {
+    title: "指挥型领导者",
+    core: "目标导向，擅长组织与决策。",
+    interest: "商业、管理、战略博弈",
+    career: "CEO、管理者、投资人",
+    city: "资源集中、竞争激烈的一线城市",
+    partner: "INFP、INTP"
+  },
+  ENTP: {
+    title: "创意型辩论者",
+    core: "点子爆炸，热衷变化与可能性。",
+    interest: "创业、即兴创作、社交",
+    career: "创业者、市场、公关",
+    city: "节奏快、文化活跃的城市",
+    partner: "INTJ、INFJ"
+  },
+  INFJ: {
+    title: "洞察型理想主义者",
+    core: "敏感而深刻，关注意义与人性。",
+    interest: "写作、心理学、艺术",
+    career: "咨询师、作者、教师",
+    city: "文化气息浓厚的城市",
+    partner: "ENFP、ENTP"
+  },
+  INFP: {
+    title: "价值型治愈者",
+    core: "忠于内心，情感深邃。",
+    interest: "文学、音乐、幻想",
+    career: "编辑、艺术家、心理相关职业",
+    city: "安静、自然友好的城市",
+    partner: "ENTJ、ENFJ"
+  },
+  ENFJ: {
+    title: "引导型共情者",
+    core: "善于激发他人潜能。",
+    interest: "教育、演讲、社群",
+    career: "教师、教练、管理",
+    city: "人际连接紧密的城市",
+    partner: "INFP、ISFP"
+  },
+  ENFP: {
+    title: "理想型冒险者",
+    core: "热情、自由、充满生命力。",
+    interest: "旅行、创作、社交",
+    career: "内容创作者、策划、自由职业",
+    city: "开放、包容、年轻化城市",
+    partner: "INTJ、INFJ"
+  },
+  ISTJ: {
+    title: "责任型执行者",
+    core: "可靠、务实、重视规则。",
+    interest: "秩序、流程优化",
+    career: "行政、审计、工程",
+    city: "稳定、结构清晰的城市",
+    partner: "ESFP、ESTP"
+  },
+  ISFJ: {
+    title: "守护型支持者",
+    core: "温和、负责、细致。",
+    interest: "照顾他人、手工",
+    career: "医疗、教育、行政",
+    city: "生活成本适中、安全感强的城市",
+    partner: "ESFP、ESTP"
+  },
+  ESTJ: {
+    title: "管理型组织者",
+    core: "高效、现实、结果导向。",
+    interest: "管理、制度建设",
+    career: "管理层、公务、企业运营",
+    city: "秩序化、高效率城市",
+    partner: "ISFP、INFP"
+  },
+  ESFJ: {
+    title: "社交型协调者",
+    core: "关注群体和谐。",
+    interest: "社交、组织活动",
+    career: "HR、客服、社区运营",
+    city: "社区感强的城市",
+    partner: "ISFP、ISTP"
+  },
+  ISTP: {
+    title: "行动型分析者",
+    core: "冷静、擅长解决实际问题。",
+    interest: "机械、工具、极限运动",
+    career: "工程师、技术专家",
+    city: "自由度高、实用主义城市",
+    partner: "ESFJ、ENFJ"
+  },
+  ISFP: {
+    title: "感性型艺术家",
+    core: "温柔、审美敏锐。",
+    interest: "艺术、摄影、自然",
+    career: "设计师、艺术创作",
+    city: "自然与艺术并存的城市",
+    partner: "ESFJ、ENTJ"
+  },
+  ESTP: {
+    title: "现实型冒险家",
+    core: "果断、享受刺激。",
+    interest: "运动、商业机会",
+    career: "销售、创业、交易",
+    city: "节奏快、机会多的城市",
+    partner: "ISFJ、ISTJ"
+  },
+  ESFP: {
+    title: "表演型体验者",
+    core: "乐观、享受当下。",
+    interest: "表演、娱乐、社交",
+    career: "演员、主播、市场",
+    city: "娱乐产业发达城市",
+    partner: "ISTJ、ISFJ"
+  }
 };
 
-let index = 0;
-const scores = {E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
-const qWrap = document.getElementById('questions');
-
-function render(){
-  qWrap.innerHTML = '';
-  const q = data[index];
-  const div = document.createElement('div');
-  div.className = 'question active';
-  div.innerHTML = `<div class="q-title">${index+1}/32 · ${q[0]}</div>
-    <div class="options">
-      <button onclick="answer('A')">${q[1]}</button>
-      <button onclick="answer('B')">${q[2]}</button>
-    </div>`;
-  qWrap.appendChild(div);
-  document.getElementById('progressBar').style.width = ((index)/32*100)+'%';
+function calculate() {
+  const form = document.forms['test'];
+  let type = '';
+  ['q1','q2','q3','q4'].forEach(q => {
+    const v = form[q].value;
+    if (!v) return alert('请完成所有题目');
+    type += v;
+  });
+  const p = profiles[type];
+  const el = document.getElementById('result');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="type">${type} · ${p.title}</div>
+    <div class="section"><span>人格核心：</span>${p.core}</div>
+    <div class="section"><span>兴趣倾向：</span>${p.interest}</div>
+    <div class="section"><span>适合职业：</span>${p.career}</div>
+    <div class="section"><span>适合城市：</span>${p.city}</div>
+    <div class="section"><span>最佳搭档：</span>${p.partner}</div>
+  `;
 }
-
-function answer(v){
-  const dim = data[index][3];
-  scores[v==='A'?dim[0]:dim[1]]++;
-  next();
-}
-
-function next(){
-  if(index<31){ index++; render(); }
-  else showResult();
-}
-
-function prev(){
-  if(index>0){ index--; render(); }
-}
-
-function showResult(){
-  const type =
-    (scores.E>=scores.I?'E':'I')+
-    (scores.S>=scores.N?'S':'N')+
-    (scores.T>=scores.F?'T':'F')+
-    (scores.J>=scores.P?'J':'P');
-  document.getElementById('type').innerText = type;
-  document.getElementById('desc').innerText = descMap[type] || '你拥有独特而复杂的人格特质。';
-  document.querySelector('.nav').style.display='none';
-  qWrap.style.display='none';
-  document.getElementById('result').style.display='block';
-}
-
-render();
 </script>
 </body>
 </html>
+update mbti content
