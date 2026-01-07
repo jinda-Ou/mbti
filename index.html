@@ -1,267 +1,214 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <title>MBTI 人格测试</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial;
-      background: linear-gradient(180deg, #0f172a, #020617);
-      color: #e5e7eb;
-    }
-    .container {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-    h1 {
-      font-size: 32px;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-    .subtitle {
-      text-align: center;
-      color: #94a3b8;
-      margin-bottom: 40px;
-    }
-    .question {
-      margin-bottom: 28px;
-      padding: 20px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.04);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-    .question p {
-      margin: 0 0 12px;
-      font-size: 16px;
-    }
-    label {
-      display: block;
-      margin: 6px 0;
-      cursor: pointer;
-    }
-    button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 999px;
-      background: #6366f1;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    button:hover {
-      background: #4f46e5;
-    }
-    .result {
-      margin-top: 50px;
-      padding: 28px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.05);
-      line-height: 1.7;
-    }
-    .type {
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
-    .section {
-      margin-top: 14px;
-    }
-    .section span {
-      color: #a5b4fc;
-      font-weight: 600;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>MBTI × 星座人格测试</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue";
+  background:linear-gradient(180deg,#fdeff9,#ecf2ff);
+  color:#1f2937
+}
+.container{max-width:760px;margin:0 auto;padding:40px 20px 120px}
+h1{text-align:center;font-size:34px;margin-bottom:6px}
+.subtitle{text-align:center;color:#6b7280;margin-bottom:24px}
+.progress{height:6px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-bottom:28px}
+.progress-inner{height:100%;width:0%;background:linear-gradient(90deg,#a5b4fc,#f0abfc);transition:width .3s}
+.card{
+  background:#ffffffcc;
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 30px 60px rgba(0,0,0,.1);
+  animation:fade .4s
+}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+p{font-size:18px}
+.scale{margin:26px 0}
+.scale input{width:100%}
+.scale-labels{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  color:#6b7280
+}
+button{
+  width:100%;
+  margin-top:28px;
+  padding:14px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(90deg,#818cf8,#e879f9);
+  color:#fff;
+  font-size:16px;
+  cursor:pointer
+}
+.result{display:none}
+.poster{
+  margin-top:20px;
+  padding:26px;
+  border-radius:28px;
+  background:linear-gradient(180deg,#ffffff,#fdf4ff);
+  box-shadow:0 20px 50px rgba(0,0,0,.12)
+}
+.type{font-size:30px;font-weight:700}
+.badge{
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:#eef2ff;
+  color:#4338ca;
+  font-size:14px
+}
+.share{
+  margin:18px 0;
+  padding:16px;
+  border-radius:16px;
+  background:#fdf2f8;
+  font-style:italic;
+  font-size:16px
+}
+.section{margin-top:14px;line-height:1.7}
+.section span{color:#6366f1;font-weight:600}
+.footer{text-align:center;color:#9ca3af;margin-top:40px;font-size:13px}
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>MBTI 人格测试</h1>
-    <div class="subtitle">通过你的直觉选择，了解你更真实的一面</div>
+<div class="container">
+<h1>✨ MBTI × 星座人格测试</h1>
+<div class="subtitle">32 题 · 滑动选择 · 可截图分享</div>
+<div class="progress"><div id="bar" class="progress-inner"></div></div>
 
-    <form id="test">
-      <div class="question">
-        <p>在聚会中，你通常：</p>
-        <label><input type="radio" name="q1" value="E"> 主动与他人交流</label>
-        <label><input type="radio" name="q1" value="I"> 更倾向于观察和倾听</label>
-      </div>
-      <div class="question">
-        <p>你更相信：</p>
-        <label><input type="radio" name="q2" value="S"> 具体经验和事实</label>
-        <label><input type="radio" name="q2" value="N"> 直觉与整体趋势</label>
-      </div>
-      <div class="question">
-        <p>做决定时你更看重：</p>
-        <label><input type="radio" name="q3" value="T"> 逻辑与客观分析</label>
-        <label><input type="radio" name="q3" value="F"> 情感与他人感受</label>
-      </div>
-      <div class="question">
-        <p>你的生活方式更接近：</p>
-        <label><input type="radio" name="q4" value="J"> 计划明确、可控</label>
-        <label><input type="radio" name="q4" value="P"> 灵活随性、开放</label>
-      </div>
-      <button type="button" onclick="calculate()">查看测试结果</button>
-    </form>
+<form id="test"></form>
+<div id="result" class="result"></div>
 
-    <div id="result" class="result" style="display:none"></div>
-  </div>
+<div class="footer">结果用于自我理解与社交分享，不构成心理诊断</div>
+</div>
 
 <script>
-const profiles = {
-  INTJ: {
-    title: "战略型思考者",
-    core: "理性、自律、追求长期结构与秩序。",
-    interest: "哲学、科技、系统设计、独立创作",
-    career: "产品经理、研究员、工程师、策划、作家",
-    city: "信息密度高、秩序感强的城市",
-    partner: "ENFP、ENTP"
-  },
-  INTP: {
-    title: "逻辑型探索者",
-    core: "沉浸于概念世界，热爱理解事物本质。",
-    interest: "理论研究、游戏、代码、冷门知识",
-    career: "程序员、学者、分析师",
-    city: "包容多元、自由度高的城市",
-    partner: "ENTJ、ENFJ"
-  },
-  ENTJ: {
-    title: "指挥型领导者",
-    core: "目标导向，擅长组织与决策。",
-    interest: "商业、管理、战略博弈",
-    career: "CEO、管理者、投资人",
-    city: "资源集中、竞争激烈的一线城市",
-    partner: "INFP、INTP"
-  },
-  ENTP: {
-    title: "创意型辩论者",
-    core: "点子爆炸，热衷变化与可能性。",
-    interest: "创业、即兴创作、社交",
-    career: "创业者、市场、公关",
-    city: "节奏快、文化活跃的城市",
-    partner: "INTJ、INFJ"
-  },
-  INFJ: {
-    title: "洞察型理想主义者",
-    core: "敏感而深刻，关注意义与人性。",
-    interest: "写作、心理学、艺术",
-    career: "咨询师、作者、教师",
-    city: "文化气息浓厚的城市",
-    partner: "ENFP、ENTP"
-  },
-  INFP: {
-    title: "价值型治愈者",
-    core: "忠于内心，情感深邃。",
-    interest: "文学、音乐、幻想",
-    career: "编辑、艺术家、心理相关职业",
-    city: "安静、自然友好的城市",
-    partner: "ENTJ、ENFJ"
-  },
-  ENFJ: {
-    title: "引导型共情者",
-    core: "善于激发他人潜能。",
-    interest: "教育、演讲、社群",
-    career: "教师、教练、管理",
-    city: "人际连接紧密的城市",
-    partner: "INFP、ISFP"
-  },
-  ENFP: {
-    title: "理想型冒险者",
-    core: "热情、自由、充满生命力。",
-    interest: "旅行、创作、社交",
-    career: "内容创作者、策划、自由职业",
-    city: "开放、包容、年轻化城市",
-    partner: "INTJ、INFJ"
-  },
-  ISTJ: {
-    title: "责任型执行者",
-    core: "可靠、务实、重视规则。",
-    interest: "秩序、流程优化",
-    career: "行政、审计、工程",
-    city: "稳定、结构清晰的城市",
-    partner: "ESFP、ESTP"
-  },
-  ISFJ: {
-    title: "守护型支持者",
-    core: "温和、负责、细致。",
-    interest: "照顾他人、手工",
-    career: "医疗、教育、行政",
-    city: "生活成本适中、安全感强的城市",
-    partner: "ESFP、ESTP"
-  },
-  ESTJ: {
-    title: "管理型组织者",
-    core: "高效、现实、结果导向。",
-    interest: "管理、制度建设",
-    career: "管理层、公务、企业运营",
-    city: "秩序化、高效率城市",
-    partner: "ISFP、INFP"
-  },
-  ESFJ: {
-    title: "社交型协调者",
-    core: "关注群体和谐。",
-    interest: "社交、组织活动",
-    career: "HR、客服、社区运营",
-    city: "社区感强的城市",
-    partner: "ISFP、ISTP"
-  },
-  ISTP: {
-    title: "行动型分析者",
-    core: "冷静、擅长解决实际问题。",
-    interest: "机械、工具、极限运动",
-    career: "工程师、技术专家",
-    city: "自由度高、实用主义城市",
-    partner: "ESFJ、ENFJ"
-  },
-  ISFP: {
-    title: "感性型艺术家",
-    core: "温柔、审美敏锐。",
-    interest: "艺术、摄影、自然",
-    career: "设计师、艺术创作",
-    city: "自然与艺术并存的城市",
-    partner: "ESFJ、ENTJ"
-  },
-  ESTP: {
-    title: "现实型冒险家",
-    core: "果断、享受刺激。",
-    interest: "运动、商业机会",
-    career: "销售、创业、交易",
-    city: "节奏快、机会多的城市",
-    partner: "ISFJ、ISTJ"
-  },
-  ESFP: {
-    title: "表演型体验者",
-    core: "乐观、享受当下。",
-    interest: "表演、娱乐、社交",
-    career: "演员、主播、市场",
-    city: "娱乐产业发达城市",
-    partner: "ISTJ、ISFJ"
-  }
+/* ---------- 基础数据 ---------- */
+
+const zodiacList=["白羊","金牛","双子","巨蟹","狮子","处女","天秤","天蝎","射手","摩羯","水瓶","双鱼"];
+
+const questions = [
+{t:"在陌生环境中，你更自然的状态是：",l:"主动靠近他人",r:"先观察再行动",d:["E","I"]},
+{t:"压力大时，你更容易恢复的方式是：",l:"找人聊天",r:"独处整理",d:["E","I"]},
+{t:"多人讨论中，你通常：",l:"边说边想",r:"想好再说",d:["E","I"]},
+{t:"社交结束后，你更常感到：",l:"被激活",r:"被消耗",d:["E","I"]},
+
+{t:"你更关注信息的：",l:"具体细节",r:"整体趋势",d:["S","N"]},
+{t:"回忆经历时你更先想到：",l:"发生了什么",r:"意味着什么",d:["S","N"]},
+{t:"你更信任：",l:"经验",r:"直觉",d:["S","N"]},
+{t:"你更擅长：",l:"执行",r:"构思",d:["S","N"]},
+
+{t:"做重要决定时你更看重：",l:"逻辑正确",r:"情感影响",d:["T","F"]},
+{t:"安慰他人时你更倾向：",l:"分析问题",r:"情感共鸣",d:["T","F"]},
+{t:"发生冲突时你更在意：",l:"原则",r:"关系",d:["T","F"]},
+{t:"被批评时你更在意：",l:"是否合理",r:"是否伤人",d:["T","F"]},
+
+{t:"面对任务时你更习惯：",l:"先计划",r:"边走边看",d:["J","P"]},
+{t:"你的生活状态更像：",l:"有序",r:"灵活",d:["J","P"]},
+{t:"做决定时你更倾向：",l:"尽快定",r:"再看看",d:["J","P"]},
+{t:"面对未知你更：",l:"想结束",r:"想探索",d:["J","P"]}
+];
+
+/* ---------- 人格画像 & 匹配 ---------- */
+
+const profiles={
+INFP:{
+title:"理想主义的隐秘浪漫者",
+share:"你不是脆弱，只是对世界要求太高。",
+self:"重视内在价值，对关系和意义极其敏感。",
+love:"ENFJ / ENTJ —— 能给你结构与安全感",
+friend:"ISFP / INFJ —— 理解你的情绪深度"
+},
+INTJ:{
+title:"冷静的长期主义者",
+share:"你不是冷漠，你只是把情绪留给值得的人。",
+self:"目标感强，习惯独立规划人生路径。",
+love:"ENFP / ESFP —— 带你回到现实与情感",
+friend:"INTP / ISTJ —— 高效低消耗相处"
+},
+ENFP:{
+title:"可能性的追逐者",
+share:"你的人生不是混乱，是不愿过早定型。",
+self:"情绪真实，对世界保持高度好奇。",
+love:"INTJ / INFJ —— 给你方向与深度",
+friend:"ENTP / ISFP —— 自由又不无聊"
+},
+ISTJ:{
+title:"秩序的维护者",
+share:"你不是固执，你只是不信任混乱。",
+self:"稳定、可靠，偏好确定性。",
+love:"ESFP / ENFP —— 带你体验生活",
+friend:"ESTJ / ISFJ —— 高度默契"
+}
 };
 
-function calculate() {
-  const form = document.forms['test'];
-  let type = '';
-  ['q1','q2','q3','q4'].forEach(q => {
-    const v = form[q].value;
-    if (!v) return alert('请完成所有题目');
-    type += v;
-  });
-  const p = profiles[type];
-  const el = document.getElementById('result');
-  el.style.display = 'block';
-  el.innerHTML = `
-    <div class="type">${type} · ${p.title}</div>
-    <div class="section"><span>人格核心：</span>${p.core}</div>
-    <div class="section"><span>兴趣倾向：</span>${p.interest}</div>
-    <div class="section"><span>适合职业：</span>${p.career}</div>
-    <div class="section"><span>适合城市：</span>${p.city}</div>
-    <div class="section"><span>最佳搭档：</span>${p.partner}</div>
+/* ---------- 测试逻辑 ---------- */
+
+let idx=0;
+let score={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+const form=document.getElementById("test");
+const bar=document.getElementById("bar");
+
+function render(){
+  bar.style.width=(idx/questions.length*100)+"%";
+  form.innerHTML="";
+  if(idx>=questions.length){return showResult()}
+  const q=questions[idx];
+  const card=document.createElement("div");
+  card.className="card";
+  card.innerHTML=`
+    <p>${q.t}</p>
+    <div class="scale">
+      <input type="range" min="-2" max="2" value="0" step="1" id="range">
+      <div class="scale-labels">
+        <span>${q.l}</span>
+        <span>${q.r}</span>
+      </div>
+    </div>
+    <button type="button" onclick="next()">下一题 →</button>
+  `;
+  form.appendChild(card);
+}
+
+function next(){
+  const v=parseInt(document.getElementById("range").value);
+  const d=questions[idx].d;
+  if(v<0) score[d[0]]+=Math.abs(v);
+  if(v>0) score[d[1]]+=v;
+  idx++;
+  render();
+}
+
+function showResult(){
+  let type=(score.E>=score.I?"E":"I")+
+           (score.S>=score.N?"S":"N")+
+           (score.T>=score.F?"T":"F")+
+           (score.J>=score.P?"J":"P");
+  const z=zodiacList[new Date().getMonth()%12];
+  const p=profiles[type]||profiles.INFP;
+  const r=document.getElementById("result");
+  r.style.display="block";
+  r.innerHTML=`
+    <div class="poster">
+      <div class="type">${type} · ${p.title}</div>
+      <div class="badge">${z}座 × ${type}</div>
+      <div class="share">“${p.share}”</div>
+
+      <div class="section"><span>你是什么样的人：</span>${p.self}</div>
+      <div class="section"><span>💖 恋爱高匹配：</span>${p.love}</div>
+      <div class="section"><span>🤝 朋友适配：</span>${p.friend}</div>
+      <div class="section"><span>📸 使用方式：</span>截图此页，分享你的 MBTI × 星座人格</div>
+    </div>
   `;
 }
+
+render();
 </script>
 </body>
 </html>
-update mbti content
